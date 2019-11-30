@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <router-view></router-view>
-  </div>
+  <div>我是登录登页面</div>
 </template>
 
 <script>
