@@ -38,6 +38,8 @@
 </template>
 
 <script>
+// 加载user.js
+import { login } from '@/api/user.js'
 export default {
   // 登录组件的名字
   name: 'LoginPage',
@@ -52,7 +54,25 @@ export default {
   },
   //   方法区
   methods: {
-
+    //   点击登录按钮触发的事件
+    async onLogin () {
+      // 开启登录加载的效果
+      this.$toast.loading({
+        message: '加载中...', // 提示消息
+        duration: 0, // 持续展示 toast
+        forbidClick: true // 背景是否是禁止点击 true为禁止 false为不禁止
+      })
+      try {
+        //   调用发送请求的login方法，这个方法中需要传一个参数，这个参数就是user对象
+        const res = await login(this.user)
+        console.log('登录成功', res)
+        //   登录成功给一个提示  显示登录成功的时候会将上一个this.$toast效果关掉，所以我们在这里不用手动关闭$toast
+        this.$toast.success('登录成功')
+      } catch (err) {
+        console.log('登录失败', err)
+        this.$toast.fail('登录失败，手机号或者验证码错误')
+      }
+    }
   }
 }
 </script>
