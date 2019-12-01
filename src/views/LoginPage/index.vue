@@ -68,6 +68,8 @@ export default {
         console.log('登录成功', res)
         //   登录成功给一个提示  显示登录成功的时候会将上一个this.$toast效果关掉，所以我们在这里不用手动关闭$toast
         this.$toast.success('登录成功')
+        // 用户登录成功之后需要将响应回来的数据传到Vuex容器中
+        this.$store.commit('setUser', res.data.data)
       } catch (err) {
         console.log('登录失败', err)
         this.$toast.fail('登录失败，手机号或者验证码错误')
