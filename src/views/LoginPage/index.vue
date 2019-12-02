@@ -70,6 +70,8 @@ export default {
         this.$toast.success('登录成功')
         // 用户登录成功之后需要将响应回来的数据传到Vuex容器中
         this.$store.commit('setUser', res.data.data)
+        // 登录成功之后需要跳转到首页
+        this.$router.push('/tabbar')
       } catch (err) {
         console.log('登录失败', err)
         this.$toast.fail('登录失败，手机号或者验证码错误')

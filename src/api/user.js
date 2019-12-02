@@ -10,3 +10,11 @@ export function login (data) {
     data
   })
 }
+
+// 获取用户频道列表
+export function UserChannelList () {
+  return request({
+    method: 'GET',
+    url: '/app/v1_0/user/channels'
+  })
+}
