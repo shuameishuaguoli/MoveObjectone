@@ -6,6 +6,7 @@
     fixed
     />
     <!-- 导航栏end -->
+
     <!-- 标签页start -->
     <van-tabs v-model="active" class="vantbabs">
       <van-tab
@@ -28,14 +29,64 @@
                   v-for="article in channel.articles"
                   :key="article.art_id.toString()"
                   :title="article.title"
-                />
+                >
+                <!-- 宫格start -->
+                  <!-- <van-grid :border="false" :column-num="3">
+                    <van-grid-item>
+                      <van-image :src="" />
+                    </van-grid-item>
+                  </van-grid> -->
+                <!-- 宫格end -->
+                </van-cell>
               </van-list>
           <!-- 内容列表end -->
         </van-pull-refresh>
         <!-- 下拉刷新组件end -->
       </van-tab>
+      <!-- 面包屑图标start 点击图标将弹出层显示-->
+      <div slot="nav-right" class="wap-nav" @click="show=true">
+        <van-icon name="wap-nav" />
+      </div>
+      <!-- 面包屑图标end -->
     </van-tabs>
     <!-- 标签页end -->
+    <!-- 弹出层start -->
+    <van-popup
+      v-model="show"
+      round
+      closeable
+      close-icon-position="top-left"
+      position="bottom"
+      :style="{ height: '95%' }"
+      @open="getallchannels"
+    >
+        <van-cell style="margin-top:30px;" title="我的频道">
+          <van-button  size="small" type="danger">编辑</van-button>
+        </van-cell>
+      <!-- 我的频道start -->
+        <van-grid>
+          <van-grid-item
+          v-for="channel in channels"
+          :key="channel.id"
+          :text="channel.name"
+          class="griditem"
+        />
+        </van-grid>
+      <!-- 我的频道end -->
+      <!-- 推荐频道start -->
+      <van-cell style="margin-top:30px;" title="推荐频道">
+      </van-cell>
+      <van-grid>
+        <van-grid-item
+        v-for="channel in recommendChannels"
+        :key="channel.id"
+        :text="channel.name"
+        class="griditem"
+      />
+      </van-grid>
+      <!-- 推荐频道end -->
+    </van-popup>
+    <!-- 弹出层end -->
   </div>
 </template>
 
@@ -47,7 +98,7 @@
   频道是否在loading加载中
 */
 // 引入user.js文件，这个文件的左右是用来发送请求的
-import { UserChannelList } from '@/api/user.js'
+import { UserChannelList, getAllChannels } from '@/api/user.js'
 // 引入获取新闻列表的接口
 import { getAticle } from '@/api/article.js'
 export default {
@@ -62,13 +113,42 @@ export default {
       loading: false,
       finished: false,
       // 下拉刷新
-      isLoading: false
+      isLoading: false,
+      // 默认弹出层是隐藏状态
+      show: false,
+      // 定义一个获取所有的频道列表的变量
+      allChannels: []
     }
   },
   //   钩子函数，组件加载的时候就执行created中的方法
   created () {
     //   在钩子函数中调用一下获取用户频道列表的方法
     this.getUserChannelList()
+  },
+  // 封装一个计算属性用来获取我们的剩余频道
+  computed: {
+    // 推荐频道
+    recommendChannels () {
+      // 定义一个空数组
+      const arr = []
+      // 遍历一下所有频道
+      this.allChannels.forEach(channel => {
+        // 这里的channel表示所有频道中的每一项
+        // 我们的逻辑是，在我的频道中找一下这个channel，如果有的话，就将获取到这个频道
+        // find方法返回的是一个数组
+
+        const res = this.channels.find(item => {
+          // find方法里面写一下查找条件
+          return item.id === channel.id
+        })
+        // 现在res中是和我的频道中的频道是一样的，所有我们要将不是res中的数据放到推荐频道中
+        if (!res) {
+          arr.push(channel)
+        }
+      })
+      // 最后返回arr
+      return arr
+    }
   },
   // 方法区
   methods: {
@@ -141,6 +221,13 @@ export default {
       })
       // 最后再把添加属性完成后的channels赋值给到我们定义好的空数组，channels
       this.channels = channels
+    },
+    // 获取所有的频道列表
+    async getallchannels () {
+      // 获取一下所有频道列表
+      const res = await getAllChannels({})
+      // 将获取到的所有频道列表赋值给到我们定义的空数组中
+      this.allChannels = res.data.data.channels
     }
   }
 }
@@ -151,4 +238,19 @@ export default {
 .vantbabs{
   margin-top: 46px;
 }
+//
+.wap-nav{
+  // 固定定位
+  position: sticky;
+  right: 0;
+  // flex布局
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  opacity: 0.7;
+}
+  .griditem{
+    margin:5px;
+    border:1px solid #ccc;
+  }
 </style>
