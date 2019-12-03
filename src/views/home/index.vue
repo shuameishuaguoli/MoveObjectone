@@ -100,12 +100,27 @@ export default {
       }
     },
     // 下拉刷新
-    onRefresh () {
-      setTimeout(() => {
-        this.$toast('刷新成功')
-        this.isLoading = false
-        this.count++
-      }, 500)
+    async onRefresh () {
+      // 下拉刷新还是要获取到当前的标签页
+      const activeChannel = this.channels[this.active]
+      // 下拉获取数据
+      const res = await getAticle({
+        // 获取标签页的id
+        channel_id: activeChannel.id,
+        // 获取当前的时间戳，因为获取的是最新数据，所有要当前最新的时间戳
+        timestamp: Date.now(),
+        // 设置文章是否置顶
+        with_top: 1
+      })
+      // 获取一下刷新出来的数据  获取到的是一个数组，一个数组要往另一个数组中添加，我们建议使用...的方式
+      const leng = res.data.data.results
+      // 将刷新出来的数据添加到数据列表中
+      activeChannel.articles.unshift(...leng)
+      // 使用三元表达式的方式对提示进行判断
+      const tips = leng.length ? `更新了${leng.length}条数据` : '暂无数据跟新'
+      this.$toast(tips)
+      // 数据更新成功之后需要将loading圈圈关闭
+      this.isLoading = false
     },
     //   获取用户频道列表
     async getUserChannelList () {
@@ -132,9 +147,8 @@ export default {
 </script>
 
 <style lang="less" scope>
+// 标签栏进行了定位
 .vantbabs{
   margin-top: 46px;
-  position: fixed;
-
 }
 </style>
