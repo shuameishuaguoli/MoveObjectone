@@ -70,7 +70,10 @@
           :key="channel.id"
           :text="channel.name"
           class="griditem"
-        />
+        >
+          <!-- 叉号图标 -->
+          <!-- <van-icon name="close" /> -->
+        </van-grid-item>
         </van-grid>
       <!-- 我的频道end -->
       <!-- 推荐频道start -->
@@ -82,6 +85,7 @@
         :key="channel.id"
         :text="channel.name"
         class="griditem"
+        @click="addChannel(channel)"
       />
       </van-grid>
       <!-- 推荐频道end -->
@@ -228,6 +232,11 @@ export default {
       const res = await getAllChannels({})
       // 将获取到的所有频道列表赋值给到我们定义的空数组中
       this.allChannels = res.data.data.channels
+    },
+    // 点击推荐频道添加到我的频道
+    addChannel (channel) {
+      // 将channel添加到我的频道中
+      this.channels.push(channel)
     }
   }
 }
