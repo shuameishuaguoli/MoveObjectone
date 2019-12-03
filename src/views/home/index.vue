@@ -3,10 +3,11 @@
       <!-- 导航栏start -->
     <van-nav-bar
     title="首页"
+    fixed
     />
     <!-- 导航栏end -->
     <!-- 标签页start -->
-    <van-tabs v-model="active">
+    <van-tabs v-model="active" class="vantbabs">
       <van-tab
       v-for="channel in channels"
       :key="channel.id"
@@ -53,8 +54,6 @@ export default {
   name: 'homePage',
   data () {
     return {
-      // 头部标签页绑定的数据
-      tabactive: 0,
       // 标签页绑定的数据
       active: 0,
       // 定义一个空，用来接收所有的标签页数据
@@ -93,7 +92,7 @@ export default {
       // 加载状态结束
       this.loading = false
       // 判断还有没有下一页数据，如果有的话则更新获取下一页的时间戳
-      const preTimestamp = res.data.data.timestamp
+      const preTimestamp = res.data.data.pre_timestamp
       if (preTimestamp) {
         activeChannel.timestamp = preTimestamp
       } else {
@@ -132,5 +131,10 @@ export default {
 }
 </script>
 
-<style>
+<style lang="less" scope>
+.vantbabs{
+  margin-top: 46px;
+  position: fixed;
+
+}
 </style>
