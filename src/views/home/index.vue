@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="home">
       <!-- 导航栏start -->
     <van-nav-bar
     title="首页"
@@ -61,18 +61,31 @@
       @open="getallchannels"
     >
         <van-cell style="margin-top:30px;" title="我的频道">
-          <van-button  size="small" type="danger">编辑</van-button>
+          <van-button
+          size="small"
+          type="danger"
+          @click="isEdit = !isEdit"
+          >
+          {{isEdit?'完成':'编辑'}}
+          </van-button>
         </van-cell>
       <!-- 我的频道start -->
         <van-grid>
           <van-grid-item
-          v-for="channel in channels"
+          v-for="(channel,index) in channels"
           :key="channel.id"
           :text="channel.name"
           class="griditem"
+          @click="onDelChannel(index)"
         >
           <!-- 叉号图标 -->
-          <!-- <van-icon name="close" /> -->
+          <van-icon
+            slot="icon"
+            class="vanicon"
+            size="20px"
+            name="close"
+            v-show="isEdit"
+          />
         </van-grid-item>
         </van-grid>
       <!-- 我的频道end -->
@@ -121,7 +134,9 @@ export default {
       // 默认弹出层是隐藏状态
       show: false,
       // 定义一个获取所有的频道列表的变量
-      allChannels: []
+      allChannels: [],
+      // 默认我的频道的叉号是隐藏的
+      isEdit: false
     }
   },
   //   钩子函数，组件加载的时候就执行created中的方法
@@ -237,6 +252,19 @@ export default {
     addChannel (channel) {
       // 将channel添加到我的频道中
       this.channels.push(channel)
+    },
+    // 点击叉号删除我的频道中的频道
+    onDelChannel (index) {
+      // 先判断是不是编辑状态，如果是编辑状态则是删除当前频道，如果不是编辑状态，则跳转到当前频道并关闭弹出层  如果是true，则是点击删除，如果是false则是跳转到当前点击的频道
+      if (this.isEdit) {
+        // 如果isEdit为true，则是编辑状态，删掉当前的频道
+        this.channels.splice(index, 1)
+      } else {
+        // 跳转到当前点击的频道页中
+        this.active = index
+        // 并把弹层关掉
+        this.show = false
+      }
     }
   }
 }
@@ -258,8 +286,15 @@ export default {
   background-color: #fff;
   opacity: 0.7;
 }
-  .griditem{
-    margin:5px;
-    border:1px solid #ccc;
+.griditem{
+  margin:5px;
+  border:1px solid #ccc;
+}
+.home{
+  /deep/ .van-grid-item__icon-wrapper{
+    position: absolute;
+    right: -12px;
+    top:-15px
   }
+}
 </style>
