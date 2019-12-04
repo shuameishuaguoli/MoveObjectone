@@ -76,15 +76,18 @@
           :key="channel.id"
           :text="channel.name"
           class="griditem"
-          @click="onDelChannel(index)"
+          @click="onDelChannel(index,channel)"
         >
-          <!-- 叉号图标 -->
+          <!-- 叉号图标
+            v-show判断channel.name内容是不是推荐，
+            如果是推荐则不添加图标，如果不是“推荐”则添加图标
+          -->
           <van-icon
             slot="icon"
             class="vanicon"
             size="20px"
             name="close"
-            v-show="isEdit"
+            v-show="channel.name==='推荐'?'':isEdit"
           />
         </van-grid-item>
         </van-grid>
@@ -254,9 +257,9 @@ export default {
       this.channels.push(channel)
     },
     // 点击叉号删除我的频道中的频道
-    onDelChannel (index) {
+    onDelChannel (index, channel) {
       // 先判断是不是编辑状态，如果是编辑状态则是删除当前频道，如果不是编辑状态，则跳转到当前频道并关闭弹出层  如果是true，则是点击删除，如果是false则是跳转到当前点击的频道
-      if (this.isEdit) {
+      if (this.isEdit && channel.name !== '推荐') {
         // 如果isEdit为true，则是编辑状态，删掉当前的频道
         this.channels.splice(index, 1)
       } else {
