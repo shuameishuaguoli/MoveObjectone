@@ -27,11 +27,14 @@ request.interceptors.request.use(
   function (config) {
     // 这里我们要获取到store中的user的token
     const user = store.state.user
-    // console.log(config)
-    // 这里的config是一个对象，这个对象中有一个headers的键名，所有这里我们可以直接就可以将config.headers.接口文档规定的键名 = `Bearer {}`
-    // Do something before request is sent
-    // config.headers.
-    config.headers.Authorization = `Bearer ${user.token}`
+    // 判断一下，如果如果有本地存储的token则使用本地存储的token
+    if (user) {
+      // console.log(config)
+      // 这里的config是一个对象，这个对象中有一个headers的键名，所有这里我们可以直接就可以将config.headers.接口文档规定的键名 = `Bearer {}`
+      // Do something before request is sent
+      // config.headers.
+      config.headers.Authorization = `Bearer ${user.token}`
+    }
     return config
   }, function (error) {
   // Do something with request error
