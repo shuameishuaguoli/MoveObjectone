@@ -25,3 +25,47 @@ export function getAllChannels () {
     url: '/app/v1_0/channels'
   })
 }
+
+// 关注用户发送的请求
+export function focusUser (userId) {
+  return request({
+    method: 'POST',
+    url: '/app/v1_0/user/followings',
+    data: {
+      target: userId
+    }
+  })
+}
+
+// 取关用户发送的请求
+export function RemovefocusUser (userId) {
+  return request({
+    method: 'DELETE',
+    url: `/app/v1_0/user/followings/${userId}`
+  })
+}
+
+// 获取指定用户账户信息
+export function GetUserInfo () {
+  return request({
+    method: 'GET',
+    url: '/app/v1_0/user'
+  })
+}
+
+// 获取用户个人资料
+export function Getuser () {
+  return request({
+    method: 'GET',
+    url: '/app/v1_0/user/profile'
+  })
+}
+
+// 保存用户头像
+export function UpdataPhoto (data) {
+  return request({
+    method: 'PATCH',
+    url: '/app/v1_0/user/photo',
+    data
+  })
+}

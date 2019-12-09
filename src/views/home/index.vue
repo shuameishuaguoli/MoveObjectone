@@ -2,9 +2,16 @@
   <div class="home">
       <!-- 导航栏start -->
     <van-nav-bar
-    title="首页"
     fixed
-    />
+    >
+      <van-button
+      @click="$router.push('/search')"
+      slot="title"
+      round
+      size="small"
+      style="width:100%; opacity: 0.5;"
+      type="default">搜索</van-button>
+    </van-nav-bar>
     <!-- 导航栏end -->
 
     <!-- 标签页start -->
@@ -29,14 +36,42 @@
                   v-for="article in channel.articles"
                   :key="article.art_id.toString()"
                   :title="article.title"
+                  @click="$router.push({
+                    name:'article',
+                    params:{
+                     articleID: article.art_id.toString()
+                    }
+                  })"
                 >
-                <!-- 宫格start -->
-                  <!-- <van-grid :border="false" :column-num="3">
-                    <van-grid-item>
-                      <van-image :src="" />
-                    </van-grid-item>
-                  </van-grid> -->
-                <!-- 宫格end -->
+                  <!-- 因为我们要在cell中添加图片，我们要看cell标签中有没有预留插槽，
+                      经查看文档，cell中预留了插槽，我们使用label将宫格插入到标题的下方
+                  -->
+                  <div slot="label">
+                  <!-- 宫格start
+                    border:表示是否显示边框
+                    column-num：表示自定义列数
+                  -->
+                    <van-grid :border="false" :column-num="3">
+                      <van-grid-item
+                      v-for="(imgURL, index) in article.cover.images"
+                      :key="index">
+                      <!-- 这里的img其实就是地址 -->
+                        <van-image
+                          height="80"
+                          :src="imgURL"
+                          lazy-load
+                        />
+                      </van-grid-item>
+                    </van-grid>
+                  <!-- 宫格end -->
+                  <!-- 文章作者、文章评论数、文章发表时间start -->
+                    <div class="comment">
+                      <span>{{article.aut_name}}</span>
+                      <span>{{article.comm_count}}评论</span>
+                      <span>{{article.pubdate | relativeTime}}</span>
+                    </div>
+                  <!-- 文章作者、文章评论数、文章发表时间end -->
+                  </div>
                 </van-cell>
               </van-list>
           <!-- 内容列表end -->
@@ -271,6 +306,7 @@ export default {
       }
       // 最后再把添加属性完成后的channels赋值给到我们定义好的空数组，Channel
       this.channels = Channel
+      console.log(this.channels)
     },
     // 获取所有的频道列表
     async getallchannels () {
@@ -281,7 +317,7 @@ export default {
     },
     // 点击推荐频道添加到我的频道
     addChannel (channel) {
-      // 将channel添加到我的频道中
+      // 在channel中添加存放文件的数组、约束状态、以及时间戳
       channel.articles = []
       // 加载结束状态
       channel.finished = false
@@ -332,7 +368,10 @@ export default {
   /deep/ .van-grid-item__icon-wrapper{
     position: absolute;
     right: -12px;
-    top:-15px
+    top:-15px;
   }
+}
+.comment span{
+  margin-right: 10px;
 }
 </style>

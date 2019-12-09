@@ -19,7 +19,9 @@ import {
   Icon, // 图标
   Popup, // 弹出层
   Cell, // 单元格
-  CellGroup // 单元格
+  CellGroup, // 单元格
+  Search, // 搜索
+  Lazyload // 图片懒加载
 } from 'vant'
 // 组件名称引入之后，需要将所有的引入的组件名称挂载到Vue实例中
 Vue
@@ -41,3 +43,5 @@ Vue
   .use(Popup) // 弹出层
   .use(Cell) // 单元格
   .use(CellGroup) // 单元格
+  .use(Search) // 搜索
+  .use(Lazyload) // 图片懒加载

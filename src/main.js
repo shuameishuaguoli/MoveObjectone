@@ -8,6 +8,10 @@ import './utils/register-vant.js'
 import './styles/index.less'
 // 引入动态适配rem基准值
 import 'amfe-flexible'
+// 加载进度条的样式
+import 'nprogress/nprogress.css'
+// 引入新建的dayjs.js文件
+import './utils/dayjs.js'
 Vue.config.productionTip = false
 
 new Vue({
