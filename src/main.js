@@ -12,8 +12,12 @@ import 'amfe-flexible'
 import 'nprogress/nprogress.css'
 // 引入新建的dayjs.js文件
 import './utils/dayjs.js'
+// 引入解决移动端点击300毫秒的插件
+import fastClick from 'fastclick'
+// 当前的是环境是开发环境还是生产环境，false为开发环境 true为生产环境
 Vue.config.productionTip = false
-
+// 引入300毫秒的插件后，需要再写入这句代码
+fastClick.attach(document.body)
 new Vue({
   router,
   store,
